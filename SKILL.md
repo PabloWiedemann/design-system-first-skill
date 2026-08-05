@@ -1,6 +1,16 @@
 ---
 name: design-system-first
-description: Design-system-first engineering principles for writing and editing code. The design system is the single source of truth; maximize reuse (semantic tokens + shared components over one-off values), keep changes modular with minimal blast radius, and apply UI/UX best practices. Use WHENEVER writing, editing, refactoring, or reviewing code — especially frontend/UI work (Vue, React, components, styling, CSS, Tailwind, colors, fonts, spacing, buttons, dialogs). Trigger even when reuse isn't mentioned: any time code is about to contain a color, font, size, button, card, repeated markup, or user-facing text, consult this skill first. A raw hex value, an inline font, a magic number, or a duplicated component is a red flag this skill exists to catch.
+description: >-
+  Design-system-first engineering principles for writing and editing code.
+  The design system is the single source of truth; maximize reuse (semantic
+  tokens + shared components over one-off values), keep changes modular with
+  minimal blast radius, and apply UI/UX best practices. Use WHENEVER writing,
+  editing, refactoring, or reviewing code — especially frontend/UI work (Vue,
+  React, components, styling, CSS, Tailwind, colors, fonts, spacing, buttons,
+  dialogs). Trigger even when reuse isn't mentioned, any time code is about
+  to contain a color, font, size, button, card, repeated markup, or
+  user-facing text. A raw hex value, an inline font, a magic number, or a
+  duplicated component is a red flag this skill exists to catch.
 ---
 
 # Reuse-first, design-system-driven code
