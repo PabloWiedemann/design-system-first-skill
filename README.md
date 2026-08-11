@@ -16,8 +16,12 @@ code:
 - **Good UI/UX by default** — distilled layout, color, motion, copy,
   accessibility, and typography best practices, with escalation to the
   `better-*` skills when installed.
+- **No token sprawl** — reference designs (Figma, mockups) map to the
+  *nearest existing* token, never to freshly minted ones; in genuinely
+  ambiguous cases the agent asks the developer with recommended options
+  instead of inventing.
 - **Comfy-aware** — a reference file encodes the ComfyUI frontend stack
-  (Vue 3 + PrimeVue + Tailwind 4 + `@comfyorg/design-system` tokens, Figma
+  (Vue 3 + Reka UI + Tailwind 4 + `@comfyorg/design-system` tokens, Figma
   as the design source of truth).
 
 ## Install

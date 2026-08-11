@@ -19,8 +19,8 @@ minutes; it pays for itself on every subsequent decision.
 3. CSS custom properties: global stylesheets (`style.css`, `tokens.css`,
    `variables.css`), or an imported design-system package
    (`@scope/design-system`).
-4. Component-library theming: PrimeVue theme presets, MUI theme, shadcn
-   `globals.css`.
+4. Component-library theming: the library's theme preset or `globals.css`
+   (shadcn, MUI, and similar).
 
 Useful searches:
 
@@ -34,9 +34,14 @@ ls src/components src/composables src/lib 2>/dev/null        # shared inventory
 
 1. The shared component directory (`components/`, `components/common/`,
    `components/ui/`) — read the folder names; they are a table of contents.
-2. The installed component library (`package.json`: PrimeVue, Radix, shadcn,
-   MUI, etc.). Library components count as existing components — check them
-   before hand-rolling anything.
+2. The **sanctioned** component library. `package.json` tells you what is
+   installed (Reka, Radix, shadcn, MUI, …), but installed ≠ sanctioned:
+   during migrations a deprecated library stays installed for years while
+   docs or lint rules ban new usage of it. Check `AGENTS.md`/`CLAUDE.md` and
+   the lint config for restricted imports before treating a dependency as
+   available. Sanctioned library components count as existing components —
+   check them before hand-rolling anything; never build new UI on a
+   deprecated library.
 3. Storybook (`pnpm storybook` / `.storybook/`) — the fastest catalog of what
    exists and which variants each component supports.
 
@@ -65,12 +70,46 @@ already uses — never introduce a second styling approach for an isolated fix.
    hand-written dark-mode overrides. If the repo's semantic tokens handle
    light/dark automatically, adding a manual override is a red flag.
 
-**When no token fits the role:** add one (reuse ladder rung 4). Define it in
-the same file and notation as its siblings, name it by role (not by value —
+### When no token matches exactly: nearest-token-first
+
+New tokens are the *strictest* thing this skill lets you create. A token set
+that grows with every feature stops being a system, so the default is always
+to land on an existing token:
+
+1. **Design values are intents, not specs.** A hex or pixel value in Figma,
+   a screenshot, or a mockup is one rendering of a *role*. Map it to the
+   nearest existing token for that role — even when the values differ
+   slightly. Small deltas from the reference are expected and correct; the
+   token system outranks pixel-perfect fidelity.
+2. **Search hard before concluding nothing fits.** Check near-synonym names
+   (`muted`/`subtle`/`secondary`), adjacent tiers, and how the closest
+   existing screen renders the same role. "No token covers this" is usually
+   a search failure, not a system gap.
+3. **Never mint a token as a reflex.** A new token needs the same
+   justification as a new component: a *recurring role* the system genuinely
+   lacks — not one unmatched value in one design.
+
+**Ask the developer instead of deciding alone** when either holds:
+
+- the nearest existing token is *meaningfully* different from the reference
+  value (visibly wrong, not just a shade off), or
+- the value is semantically unlike every existing token **and** appears only
+  once, tied to no reusable component (e.g., a syntax-highlighting color for
+  one isolated text block).
+
+When asking, present concrete options with a recommendation, e.g.:
+
+> The design uses `#8B5CF6` for X; nearest token is `--accent-secondary`
+> (Δ noticeable). Options: (a) use `--accent-secondary` and accept the
+> drift — recommended if X is a normal accent role; (b) add a semantic token
+> (proposed name `--surface-highlight`) if this role will recur; (c) keep it
+> as a scoped constant next to its single use, with a comment, if it's a
+> true one-off. Which do you prefer?
+
+If the developer opts for a new token: define it in the same file and
+notation as its siblings, name it by role (not by value —
 `--surface-warning`, never `--light-yellow`), give it values for every theme
-the repo supports, then consume it. Before adding, search for a near-synonym:
-`muted` vs `subtle` vs `secondary` — if one exists, use it instead of
-introducing a competing name.
+the repo supports, then consume it.
 
 ## Step 3 — Selecting a component
 

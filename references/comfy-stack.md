@@ -12,7 +12,7 @@ start of a session.
 | --- | --- |
 | Framework | Vue 3.5+ SFCs, Composition API only, TypeScript only |
 | Styling | Tailwind CSS v4 — avoid `<style>` blocks in components |
-| Component library | PrimeVue (+ `@primevue/forms`, `@primeuix/*`) |
+| Component library | Reka UI (headless primitives, shadcn/vue patterns) — the target across Comfy repos. PrimeVue remains installed as a **legacy** dependency only: new PrimeVue usage is banned (`AGENTS.md` rule + lint restrictions). |
 | Tokens | `@comfyorg/design-system` workspace package (CSS custom properties, imported via `src/assets/css/style.css`) |
 | Class utility | `cn()` from `@comfyorg/tailwind-utils` for conditional class merging |
 | State | Pinia stores (`*Store.ts`) |
@@ -54,14 +54,23 @@ Design decisions flow one way; never shortcut a link:
 
 - Search `src/components/` first — it is organized by domain plus shared
   folders (`common/`, `button/`, `card/`, `chip/`, `dialog/`, `icons/`, …) —
-  then PrimeVue, then Storybook, before building anything.
+  then Storybook, then Reka UI primitives, before building anything.
+- **Never add new PrimeVue components** in `ComfyUI_frontend` — the repo's
+  lint/agent rules block them. When editing existing PrimeVue-based code,
+  don't deepen the coupling (no new PrimeVue-specific props/APIs spreading
+  outward); prefer the existing shared wrappers.
+- **Platform repo caveat**: the platform repo still uses PrimeVue today and
+  will migrate to Reka later. There, reuse its existing PrimeVue-based
+  components as the current system — but keep new work migration-friendly:
+  go through shared wrappers rather than scattering direct PrimeVue imports,
+  and don't introduce PrimeVue into code that doesn't already use it.
 - Components communicate via `emit`/`@event-name` for state changes;
   `defineExpose` only for imperative operations (`form.validate()`,
   `modal.open()`).
 - Naming: components `PascalCase.vue`, composables `useXyz.ts`, stores
   `*Store.ts`.
-- Icons come through the project's icon pipeline (iconify/unplugin-icons +
-  `primeicons`) — don't paste raw SVG markup into templates.
+- Icons come through the project's icon pipeline (iconify/unplugin-icons) —
+  don't paste raw SVG markup into templates.
 
 ## Done means checked
 

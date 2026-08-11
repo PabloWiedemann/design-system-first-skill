@@ -60,11 +60,17 @@ rung that works; never fall off the bottom.
 | 5. Create a shared unit | Build a new component/token/composable in the canonical shared place, named by role, and consume it — including at the call site that prompted it. |
 | ∅ Never | An inline literal, a hand-rolled clone of an existing component, or a local one-off style. |
 
-Creating a token or component at rung 5 is not scope creep — it is the point.
+Creating a shared component at rung 5 is not scope creep — it is the point.
 What must never happen is the one-off: a raw `#3b82f6`, an inline
 `font-family`, a magic `13px`, or a second copy-pasted block of markup. A
 literal can't be themed, drifts out of sync, and hides that the concept
 already exists.
+
+**Tokens climb a shorter ladder than components.** "No hardcoded values"
+must not flip into "mint a token for every unmatched value" — a token set
+that grows per-feature stops being a system. For tokens the default is
+always the *nearest existing* token, and rungs 4–5 require either a clearly
+recurring role or the developer's explicit go-ahead (see Principle 2).
 
 **Extraction trigger:** copying a block of template or logic a *second* time
 is the signal to extract a component or composable. Repeated behavior belongs
@@ -84,9 +90,21 @@ hand-rolling markup because it *looks* simple. Select semantically:
 - **Precedent**: when two candidates both fit, find the closest analogous
   screen in the repo and copy its choice. Consistency with siblings beats
   personal preference every time.
-- **Missing role**: if no token/component covers the role, that is rung 4–5 of
-  the ladder — add it to the shared source, don't approximate with a
-  neighbor's token.
+- **Reference designs are intents, not specs.** When a Figma link, mockup,
+  or screenshot contains values the token set doesn't cover exactly, map
+  each value to the *nearest existing token* for its role — small deltas
+  from the reference are expected and correct. Do not mint new tokens to
+  chase exact design values.
+- **Ask, don't invent, in the gray zone.** Stop and ask the developer —
+  presenting 2–3 concrete options with a recommendation — when the nearest
+  token is *meaningfully* different from the reference value, or when the
+  value is semantically unlike every existing token and appears only once
+  outside any reusable component. The options are typically: nearest token
+  (accept the drift), a new semantic token (only if the role will recur), or
+  a scoped one-off constant with a comment.
+- **Missing component role**: if no component covers the purpose, that is
+  rung 4–5 of the ladder — extend or add in the shared source, don't
+  approximate with hand-rolled markup.
 
 Full decision procedure, search recipes, and naming rules:
 [selection-guide.md](references/selection-guide.md).
@@ -166,6 +184,8 @@ declaration* of a new token or component:
 | Copy-pasted markup block | Extract or reuse a component |
 | New component near-duplicating an existing one | Extend the existing one with a variant |
 | New token duplicating an existing role | Reuse the existing token |
+| New token minted to match one reference-design value | Use the nearest existing token, or ask the developer if it's meaningfully different |
+| New UI built on a library the repo has deprecated | Use the sanctioned library — check docs/lint, not just `package.json` |
 | Token or component chosen by value, not role | Re-select semantically |
 | Hardcoded user-facing string where the repo uses i18n | Add the locale entry |
 | Style override fighting the component's own API | Use the prop/variant, or extend it |
